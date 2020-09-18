@@ -6,7 +6,6 @@
     "node": true
   },
   "rules": {
-    "semi": "off",
     "object-curly-spacing": "off",
     "linebreak-style": 0
   },
