@@ -23,10 +23,12 @@ class Dom {
     return this;
   }
 
+  // Аналог addEventListener. Упрощенная запись
   on(eventType, callback) {
     this.$el.addEventListener(eventType, callback);
   }
 
+  // Аналог removeEventListener. Упрощенная запись
   remove(eventType, callback) {
     this.$el.removeEventListener(eventType, callback);
   }
@@ -41,6 +43,30 @@ class Dom {
       this.$el.appendChild(node);
     }
     return this;
+  }
+
+  closest(selector) {
+    return $(this.$el.closest(selector));
+  }
+
+  getCoord() {
+    return this.$el.getBoundingClientRect();
+  }
+
+  findAll(selector) {
+    return this.$el.querySelectorAll(selector);
+  }
+
+  css(styles= {}) {
+    Object
+        .keys(styles)
+        .forEach((styleItem) => {
+          this.$el.style[styleItem] = styles[styleItem];
+        });
+  }
+
+  get data() {
+    return this.$el.dataset;
   }
 }
 
