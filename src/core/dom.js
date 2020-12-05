@@ -89,6 +89,11 @@ class Dom {
     }
   }
 
+  focus() {
+    this.$el.focus();
+    return this;
+  }
+
   get data() {
     return this.$el.dataset;
   }
