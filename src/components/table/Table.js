@@ -1,7 +1,7 @@
 import {ExcelCopmonent} from '@core/ExcelCopmonent';
 import {createTable} from '@/components/table/table.template';
 import {resizeHandler} from '@/components/table/table.resize';
-import {isCell, matrix, shouldResize} from '@/components/table/table.functions';
+import {isCell, matrix, shouldResize, nextSelector} from './table.functions';
 import {TableSelection} from '@/components/table/TableSelection';
 import {$} from '@core/dom';
 
@@ -10,7 +10,7 @@ export class Table extends ExcelCopmonent {
 
   constructor($root) {
     super($root, {
-      listeners: ['mousedown', 'mousemove', 'mouseup'],
+      listeners: ['mousedown', 'keydown'],
     });
   }
 
@@ -43,11 +43,23 @@ export class Table extends ExcelCopmonent {
     }
   }
 
-  onMousemove(e) {
+  onKeydown(e) {
+    const keys = [
+      'Enter',
+      'Tab',
+      'ArrowLeft',
+      'ArrowRight',
+      'ArrowUp',
+      'ArrowDown',
+    ];
 
-  }
+    const {key} = event; // Получаем значение свойства key из event
 
-  onMouseup(e) {
-
+    if (keys.includes(key) && !e.shiftKey) {
+      e.preventDefault();
+      const id = this.selection.current.id(true);
+      const $next = this.$root.find(nextSelector(key, id));
+      this.selection.select($next);
+    }
   }
 }
