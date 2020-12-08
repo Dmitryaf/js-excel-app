@@ -1,4 +1,5 @@
 import {ExcelCopmonent} from '@core/ExcelCopmonent';
+import {TableSelection} from '@/components/table/TableSelection';
 
 export class Formula extends ExcelCopmonent {
   static className = 'excel__formula';
@@ -6,7 +7,7 @@ export class Formula extends ExcelCopmonent {
   constructor($root, options) {
     super($root, {
       name: 'Formula',
-      listeners: ['input'],
+      listeners: ['input', 'keydown'],
       ...options,
     });
   }
@@ -18,8 +19,19 @@ export class Formula extends ExcelCopmonent {
   `;
   }
 
+  prepare() {
+    this.selection = new TableSelection();
+  }
+
   onInput(event) {
     const text = event.target.textContent.trim();
-    this.emitter.emit('it is working', text);
+    this.$emit('it is working', text);
+  }
+
+  onKeydown(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      this.$emit('formula:focus');
+    }
   }
 }
