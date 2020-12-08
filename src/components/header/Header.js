@@ -3,6 +3,12 @@ import {ExcelCopmonent} from '@core/ExcelCopmonent';
 export class Header extends ExcelCopmonent {
   static className = 'excel__header';
 
+  constructor($root, options) {
+    super($root, {
+      name: 'Header',
+      ...options,
+    });
+  }
   toHTML() {
     return `        
         <input type="text" class="input" value="Новая таблица" />

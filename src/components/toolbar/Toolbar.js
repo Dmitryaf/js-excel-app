@@ -3,10 +3,11 @@ import {ExcelCopmonent} from '@core/ExcelCopmonent';
 export class Toolbar extends ExcelCopmonent {
   static className = 'excel__toolbar';
 
-  constructor($root) {
+  constructor($root, options) {
     super($root, {
       name: 'Toolbar',
       listeners: ['click'],
+      ...options,
     });
   }
 
