@@ -5,10 +5,18 @@ const CODES = {
 };
 
 // Создаёт ячейки
-function toCell(_, col) {
-  return `
-    <div class="cell" contenteditable data-col="${col}"></div>
-  `;
+function toCell(row) {
+  return function(_, col) {
+    return `
+      <div 
+        class="cell" 
+        contenteditable 
+        data-col="${col}"
+        data-type="cell"
+        data-id="${row}:${col}">
+      </div>
+    `;
+  };
 }
 
 // Создаёт колонки
@@ -55,17 +63,16 @@ export function createTable(rowsCount = 20) {
       .map(toColumn) // По мимо callback-функции сюда неявно передается и index
       .join('');
 
-  // Создаем ячейки
-  const cells = new Array(colsCount)
-      .fill('')
-      .map(toCell)
-      .join('');
-
-
   rows.push(createRow('', cols));
 
-  for (let i = 1; i <= rowsCount; i++) {
-    rows.push(createRow(i, cells));
+  for (let row = 0; row <= rowsCount; row++) {
+    // Создаем ячейки
+    const cells = new Array(colsCount)
+        .fill('')
+        .map(toCell(row))
+        .join('');
+
+    rows.push(createRow(row + 1, cells));
   }
 
   return rows.join('');
