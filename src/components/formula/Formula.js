@@ -1,5 +1,6 @@
 import {ExcelCopmonent} from '@core/ExcelCopmonent';
 import {TableSelection} from '@/components/table/TableSelection';
+import {$} from '@core/dom';
 
 export class Formula extends ExcelCopmonent {
   static className = 'excel__formula';
@@ -15,7 +16,12 @@ export class Formula extends ExcelCopmonent {
   toHTML() {
     return `
         <div class="info">fx</div>
-        <div class="input" contenteditable spellcheck="false"></div>
+        <div id="formula" 
+          class="input" 
+          contenteditable 
+          spellcheck="false"
+        >
+        </div>
   `;
   }
 
@@ -23,13 +29,26 @@ export class Formula extends ExcelCopmonent {
     this.selection = new TableSelection();
   }
 
+  init() {
+    super.init();
+    this.$formula = this.$root.find('#formula');
+
+    this.$on('table:select', ($cell) => {
+      this.$formula.text($cell.text());
+    });
+
+    this.$on('table:input', ($cell) => {
+      this.$formula.text($cell.text());
+    });
+  }
+
   onInput(event) {
-    const text = event.target.textContent.trim();
-    this.$emit('it is working', text);
+    this.$emit('it is working', $(event.target).text());
   }
 
   onKeydown(event) {
-    if (event.key === 'Enter') {
+    const keys = ['Enter', 'Tab'];
+    if (keys.includes(event.key)) {
       event.preventDefault();
       this.$emit('formula:focus');
     }
