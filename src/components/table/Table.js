@@ -32,7 +32,7 @@ export class Table extends ExcelCopmonent {
       this.selection.current.text(text);
     });
     this.$on('formula:focus', () => {
-      this.selection.select(this.selection.current);
+      this.selection.current.focus();
     });
   }
 
