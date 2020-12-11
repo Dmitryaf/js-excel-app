@@ -1,17 +1,20 @@
-import { DomListener } from '@core/DOMlistener';
+import {DomListener} from '@core/DOMlistener';
 
 export class ExcelCopmonent extends DomListener {
   constructor($root, options = {}) {
     super($root, options.listeners);
     this.name = options.name || '';
     this.emitter = options.emitter;
+    this.store = options.store;
+    this.storeSub = null;
     this.unsubscribers = [];
 
     this.prepare();
   }
 
   // Настраиваем компонент до init
-  prepare() {}
+  prepare() {
+  }
 
   // Возвращает шаблон компонента
   toHTML() {
@@ -27,6 +30,14 @@ export class ExcelCopmonent extends DomListener {
     this.unsubscribers.push(unsub);
   }
 
+  $dispatch(action) {
+    this.store.dispatch(action);
+  }
+
+  $subscribe(fn) {
+    this.storeSub = this.store.subscribe(fn);
+  }
+
   // Инициализируем компонент
   // Добавляем DOM слушателей
   init() {
@@ -38,5 +49,6 @@ export class ExcelCopmonent extends DomListener {
   destroy() {
     this.removeDOMListeners();
     this.unsubscribers.forEach((unsub) => unsub());
+    this.storeSub.unsubscribe();
   }
 }
