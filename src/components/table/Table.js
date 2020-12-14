@@ -4,6 +4,7 @@ import {resizeHandler} from '@/components/table/table.resize';
 import {isCell, matrix, shouldResize, nextSelector} from './table.functions';
 import {TableSelection} from '@/components/table/TableSelection';
 import {$} from '@core/dom';
+import {TABLE_RESIZE} from '@/redux/types';
 
 export class Table extends ExcelCopmonent {
   static className = 'excel__table';
@@ -24,11 +25,6 @@ export class Table extends ExcelCopmonent {
     this.selection = new TableSelection();
   }
 
-  selectCell($cell) {
-    this.selection.select($cell);
-    this.$emit('table:select', $cell);
-  }
-
   init() {
     super.init();
 
@@ -41,19 +37,37 @@ export class Table extends ExcelCopmonent {
     this.$on('formula:focus', () => {
       this.selection.current.focus();
     });
+
+    this.$subscribe((state) => {
+      console.log(state);
+    });
+  }
+
+  selectCell($cell) {
+    this.selection.select($cell);
+    this.$emit('table:select', $cell);
+  }
+
+  async tableResize(e) {
+    try {
+      const data = await resizeHandler(this.$root, e);
+      this.$dispatch({type: TABLE_RESIZE, data});
+    } catch (e) {
+      console.log(e.message());
+    }
   }
 
   onMousedown(e) {
     if (shouldResize(e)) {
-      resizeHandler(this.$root, e);
+      this.tableResize(e);
     } else if (isCell(e)) {
       const $target = $(e.target);
       if (e.shiftKey) {
-        const $cells = matrix( $target, this.selection.current)
+        const $cells = matrix($target, this.selection.current)
             .map((id) => this.$root.find([`[data-id="${id}"]`]));
         this.selection.selectGroup($cells);
       } else {
-        this.selection.select($target);
+        this.selectCell($target);
       }
     }
   }
