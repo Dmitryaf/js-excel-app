@@ -4,7 +4,7 @@ import {resizeHandler} from '@/components/table/table.resize';
 import {isCell, matrix, shouldResize, nextSelector} from './table.functions';
 import {TableSelection} from '@/components/table/TableSelection';
 import {$} from '@core/dom';
-import {TABLE_RESIZE} from '@/redux/types';
+import * as actions from '@/redux/actions';
 
 export class Table extends ExcelCopmonent {
   static className = 'excel__table';
@@ -39,7 +39,7 @@ export class Table extends ExcelCopmonent {
     });
 
     this.$subscribe((state) => {
-      console.log(state);
+
     });
   }
 
@@ -51,7 +51,7 @@ export class Table extends ExcelCopmonent {
   async tableResize(e) {
     try {
       const data = await resizeHandler(this.$root, e);
-      this.$dispatch({type: TABLE_RESIZE, data});
+      this.$dispatch(actions.tableResize(data));
     } catch (e) {
       console.log(e.message());
     }
