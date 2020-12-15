@@ -5,9 +5,14 @@ const CODES = {
 };
 
 const DEFAULT_COL_WIDTH = 120;
+const DEFAULT_ROW_HEIGHT = 24;
 
 function getWidth(state, index) {
   return (state[index] || DEFAULT_COL_WIDTH) + 'px';
+}
+
+function getHeight(state, index) {
+  return (state[index] || DEFAULT_ROW_HEIGHT) + 'px';
 }
 
 function widthWidthState(state) {
@@ -51,13 +56,18 @@ function toColumn({col, index, width}) {
 }
 
 // Создаёт строки
-function createRow(index, content) {
+function createRow(index, content, state) {
+  const rowHeight = getHeight(state, index);
   const resize = index
     ? `<div class="row-resize" data-resize="row"></div>`
     : '';
 
   return `
-    <div class="row" data-type="resizable">
+    <div 
+    class="row" 
+    style="height: ${rowHeight}"
+    data-type="resizable" 
+    data-row="${index}">
       <div class="row-info">
         ${index ? index : ''}
         ${resize}
@@ -81,20 +91,20 @@ export function createTable(rowsCount = 20, state= {}) {
   const cols = new Array(colsCount)
       .fill('')
       .map(toChar)
-      .map(widthWidthState(state))
+      .map(widthWidthState(state.colState))
       .map(toColumn) // По мимо callback-функции сюда неявно передается и index
       .join('');
 
-  rows.push(createRow('', cols));
+  rows.push(createRow(null, cols, {}));
 
   for (let row = 0; row <= rowsCount; row++) {
     // Создаем ячейки
     const cells = new Array(colsCount)
         .fill('')
-        .map(toCell(state, row))
+        .map(toCell(state.colState, row))
         .join('');
 
-    rows.push(createRow(row + 1, cells));
+    rows.push(createRow(row + 1, cells, state.rowState));
   }
 
   return rows.join('');
