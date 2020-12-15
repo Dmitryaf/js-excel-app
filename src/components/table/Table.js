@@ -18,7 +18,7 @@ export class Table extends ExcelCopmonent {
   }
 
   toHTML() {
-    return createTable(20, this.store.getStore().colState);
+    return createTable(20, this.store.getStore());
   }
 
   prepare() {
