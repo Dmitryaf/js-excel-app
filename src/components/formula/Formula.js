@@ -37,13 +37,17 @@ export class Formula extends ExcelCopmonent {
       this.$formula.text($cell.text());
     });
 
-    this.$on('table:input', ($cell) => {
-      this.$formula.text($cell.text());
+    // this.$on('table:input', ($cell) => {
+    //   this.$formula.text($cell.text());
+    // });
+
+    this.$subscribe((state) => {
+      this.$formula.text(state.currentText);
     });
   }
 
   onInput(event) {
-    this.$emit('it is working', $(event.target).text());
+    this.$emit('formula:input', $(event.target).text());
   }
 
   onKeydown(event) {
