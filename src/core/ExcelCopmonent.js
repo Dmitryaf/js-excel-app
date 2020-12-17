@@ -37,9 +37,7 @@ export class ExcelCopmonent extends DomListener {
     return this.subscribe.includes(key);
   }
 
-  storeChanged() {
-
-  }
+  storeChanged() {}
 
   // Инициализируем компонент
   // Добавляем DOM слушателей
