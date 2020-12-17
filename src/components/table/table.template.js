@@ -26,16 +26,19 @@ function widthWidthState(state) {
 // Создаёт ячейки
 function toCell(state, row) {
   return function(_, col) {
-    const colWidth = getWidth(state, col);
+    const colWidth = getWidth(state.colState, col);
+    const cellId = `${row}:${col}`;
+    const data = state.dataState[cellId] || '';
     return `
       <div 
         class="cell" 
         contenteditable 
         data-col="${col}"
         data-type="cell"
-        data-id="${row}:${col}"
+        data-id="${cellId}"
         style="width:${colWidth}"
         >
+        ${data}
       </div>
     `;
   };
@@ -101,7 +104,7 @@ export function createTable(rowsCount = 20, state= {}) {
     // Создаем ячейки
     const cells = new Array(colsCount)
         .fill('')
-        .map(toCell(state.colState, row))
+        .map(toCell(state, row))
         .join('');
 
     rows.push(createRow(row + 1, cells, state.rowState));
