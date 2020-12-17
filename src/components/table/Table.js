@@ -38,10 +38,6 @@ export class Table extends ExcelCopmonent {
     this.$on('formula:focus', () => {
       this.selection.current.focus();
     });
-
-    this.$subscribe((state) => {
-
-    });
   }
 
   selectCell($cell) {
