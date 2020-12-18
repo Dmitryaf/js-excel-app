@@ -1,4 +1,7 @@
 // Объект с символами. Нужен для упрощения наименования колонок
+import {camelToDashCase} from '@core/utils';
+import {defaultStyles} from '@/constants';
+
 const CODES = {
   A: 65,
   Z: 90,
@@ -29,6 +32,9 @@ function toCell(state, row) {
     const colWidth = getWidth(state.colState, col);
     const cellId = `${row}:${col}`;
     const data = state.dataState[cellId] || '';
+    const styles = Object.keys(defaultStyles)
+        .map((key) => `${camelToDashCase(key)}: ${defaultStyles[key]}`)
+        .join(';');
     return `
       <div 
         class="cell" 
@@ -36,7 +42,7 @@ function toCell(state, row) {
         data-col="${col}"
         data-type="cell"
         data-id="${cellId}"
-        style="width:${colWidth}"
+        style="${styles}; width:${colWidth}"
         >
         ${data}
       </div>
