@@ -1,7 +1,13 @@
-import {CHANGE_STYLES, CHANGE_TEXT, TABLE_RESIZE} from '@/redux/types';
+import {
+  APPLY_STYLES,
+  CHANGE_STYLES, CHANGE_TABLE_NAME,
+  CHANGE_TEXT,
+  TABLE_RESIZE,
+} from '@/redux/types';
 
 export function rootReducer(state, action) {
   let field;
+  let val;
   switch (action.type) {
     case TABLE_RESIZE:
       field = action.data.type === 'col' ? 'colState' : 'rowState';
@@ -11,17 +17,34 @@ export function rootReducer(state, action) {
       };
 
     case CHANGE_TEXT:
-      field = 'dataState';
       return {
         ...state,
         currentText: action.data.value,
-        [field]: value(state, field, action),
+        dataState: value(state, 'dataState', action),
       };
 
     case CHANGE_STYLES:
       return {
         ...state,
         currentStyles: action.data
+      };
+
+    case APPLY_STYLES:
+      val = state['stylesState'] || {};
+      action.data.ids.forEach((id) => {
+        val[id] = {...val[id], ...action.data.value};
+      });
+
+      return {
+        ...state,
+        stylesState: val,
+        currentStyles: {...state.currentStyles, ...action.data.value}
+      };
+
+    case CHANGE_TABLE_NAME:
+      return {
+        ...state,
+        tableTitle: action.data
       };
 
     default:
