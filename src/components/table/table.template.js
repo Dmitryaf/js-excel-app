@@ -1,5 +1,6 @@
 // Объект с символами. Нужен для упрощения наименования колонок
-import {camelToDashCase} from '@core/utils';
+
+import {toInlineStyles} from '@core/utils';
 import {defaultStyles} from '@/constants';
 
 const CODES = {
@@ -32,9 +33,8 @@ function toCell(state, row) {
     const colWidth = getWidth(state.colState, col);
     const cellId = `${row}:${col}`;
     const data = state.dataState[cellId] || '';
-    const styles = Object.keys(defaultStyles)
-        .map((key) => `${camelToDashCase(key)}: ${defaultStyles[key]}`)
-        .join(';');
+    const styles =
+      toInlineStyles( {...defaultStyles, ...state.stylesState[cellId]});
     return `
       <div 
         class="cell" 
