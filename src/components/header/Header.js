@@ -1,4 +1,7 @@
 import {ExcelCopmonent} from '@core/ExcelCopmonent';
+import * as actions from '@/redux/actions';
+import {createInput} from '@/components/header/header.template';
+import {$} from '@core/dom';
 
 export class Header extends ExcelCopmonent {
   static className = 'excel__header';
@@ -6,22 +9,17 @@ export class Header extends ExcelCopmonent {
   constructor($root, options) {
     super($root, {
       name: 'Header',
+      listeners: ['input'],
+      subscribe: ['tableTitle'],
       ...options,
     });
   }
+
   toHTML() {
-    return `        
-        <input type="text" class="input" value="Новая таблица" />
+    return createInput(this.store.getStore().tableTitle);
+  }
 
-        <div>
-          <div class="button">
-            <i class="material-icons">delete</i>
-          </div>
-
-          <div class="button">
-            <i class="material-icons">exit_to_app</i>
-          </div>
-       </div>
-    `;
+  onInput(event) {
+    this.$dispatch(actions.changeTableTitle($(event.target).text()));
   }
 }
