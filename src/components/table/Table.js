@@ -40,8 +40,12 @@ export class Table extends ExcelCopmonent {
       this.selection.current.focus();
     });
 
-    this.$on('toolbar:applyStyle', (style) => {
-      this.selection.applyStyles(style);
+    this.$on('toolbar:applyStyle', (value) => {
+      this.selection.applyStyles(value);
+      this.$dispatch(actions.applyStyles({
+        value,
+        ids: this.selection.selectedIds
+      }));
     });
   }
 
