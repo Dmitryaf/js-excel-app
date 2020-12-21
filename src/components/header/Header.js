@@ -2,6 +2,7 @@ import {ExcelCopmonent} from '@core/ExcelCopmonent';
 import * as actions from '@/redux/actions';
 import {createInput} from '@/components/header/header.template';
 import {$} from '@core/dom';
+import {debounce} from '@core/utils';
 
 export class Header extends ExcelCopmonent {
   static className = 'excel__header';
@@ -13,6 +14,10 @@ export class Header extends ExcelCopmonent {
       subscribe: ['tableTitle'],
       ...options,
     });
+  }
+
+  prepare() {
+    this.onInput = debounce(this.onInput, 300);
   }
 
   toHTML() {
