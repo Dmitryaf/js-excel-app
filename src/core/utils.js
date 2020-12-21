@@ -39,3 +39,18 @@ export function toInlineStyles(styles = {}) {
       .map((key) => `${camelToDashCase(key)}: ${styles[key]}`)
       .join(';');
 }
+
+/* Игнорирует все вызов функции пока они не прекратятся
+на определенный период времени */
+export function debounce(fn, wait) {
+  let timeout;
+  return function(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      // eslint-disable-next-line no-invalid-this
+      fn.apply(this, args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
