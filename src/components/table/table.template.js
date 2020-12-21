@@ -1,28 +1,66 @@
 // Объект с символами. Нужен для упрощения наименования колонок
+
+import {toInlineStyles} from '@core/utils';
+import {defaultStyles} from '@/constants';
+import {parse} from '@core/parse';
+
+
 const CODES = {
   A: 65,
   Z: 90,
 };
 
+const DEFAULT_COL_WIDTH = 120;
+const DEFAULT_ROW_HEIGHT = 24;
+
+function getWidth(state, index) {
+  return (state[index] || DEFAULT_COL_WIDTH) + 'px';
+}
+
+function getHeight(state, index) {
+  return (state[index] || DEFAULT_ROW_HEIGHT) + 'px';
+}
+
+function widthWidthState(state) {
+  return function(col, index) {
+    return {
+      col, index, width: getWidth(state, index),
+    };
+  };
+}
+
 // Создаёт ячейки
-function toCell(row) {
+function toCell(state, row) {
   return function(_, col) {
+    const colWidth = getWidth(state.colState, col);
+    const cellId = `${row}:${col}`;
+    const data = state.dataState[cellId];
+    const styles =
+      toInlineStyles( {...defaultStyles, ...state.stylesState[cellId]});
     return `
       <div 
         class="cell" 
         contenteditable 
         data-col="${col}"
         data-type="cell"
-        data-id="${row}:${col}">
+        data-id="${cellId}"
+        data-value="${data || ''}"
+        style="${styles}; width:${colWidth}"
+        >
+        ${parse(data) || ''}
       </div>
     `;
   };
 }
 
 // Создаёт колонки
-function toColumn(col, index) {
+function toColumn({col, index, width}) {
   return `
-    <div class="column" data-type="resizable" data-col="${index}">
+    <div 
+    class="column" 
+    data-type="resizable"
+    style="width: ${width}" 
+    data-col="${index}">
         ${col}
         <div class="col-resize" data-resize="col"></div>
     </div>
@@ -30,13 +68,18 @@ function toColumn(col, index) {
 }
 
 // Создаёт строки
-function createRow(index, content) {
+function createRow(index, content, state) {
+  const rowHeight = getHeight(state, index);
   const resize = index
     ? `<div class="row-resize" data-resize="row"></div>`
     : '';
 
   return `
-    <div class="row" data-type="resizable">
+    <div 
+    class="row" 
+    style="height: ${rowHeight}"
+    data-type="resizable" 
+    data-row="${index}">
       <div class="row-info">
         ${index ? index : ''}
         ${resize}
@@ -52,7 +95,7 @@ function toChar(_, index) {
 }
 
 // Генерация таблицы
-export function createTable(rowsCount = 20) {
+export function createTable(rowsCount = 20, state= {}) {
   const colsCount = CODES.Z - CODES.A + 1;
   const rows = [];
 
@@ -60,19 +103,20 @@ export function createTable(rowsCount = 20) {
   const cols = new Array(colsCount)
       .fill('')
       .map(toChar)
+      .map(widthWidthState(state.colState))
       .map(toColumn) // По мимо callback-функции сюда неявно передается и index
       .join('');
 
-  rows.push(createRow('', cols));
+  rows.push(createRow(null, cols, {}));
 
   for (let row = 0; row <= rowsCount; row++) {
     // Создаем ячейки
     const cells = new Array(colsCount)
         .fill('')
-        .map(toCell(row))
+        .map(toCell(state, row))
         .join('');
 
-    rows.push(createRow(row + 1, cells));
+    rows.push(createRow(row + 1, cells, state.rowState));
   }
 
   return rows.join('');

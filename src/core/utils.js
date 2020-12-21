@@ -13,3 +13,44 @@ export function range(start, end) {
       .fill('')
       .map((_, index) => start + index);
 }
+
+export function storage(key, data = null) {
+  if (!data) {
+    return JSON.parse(localStorage.getItem(key));
+  } else {
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+}
+
+export function isEqual(a, b) {
+  if (typeof a === 'object' && typeof b === 'object') {
+    return JSON.stringify(a) === JSON.stringify(b);
+  }
+  return a === b;
+}
+
+export function camelToDashCase(str) {
+  return str.replace(/([A-Z])/g, (g) => `-${g[0].toLowerCase()}`);
+}
+
+// Преобразовывает объект со стилями в инлайновые стили
+export function toInlineStyles(styles = {}) {
+  return Object.keys(styles)
+      .map((key) => `${camelToDashCase(key)}: ${styles[key]}`)
+      .join(';');
+}
+
+/* Игнорирует все вызов функции пока они не прекратятся
+на определенный период времени */
+export function debounce(fn, wait) {
+  let timeout;
+  return function(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      // eslint-disable-next-line no-invalid-this
+      fn.apply(this, args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}

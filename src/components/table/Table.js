@@ -4,6 +4,10 @@ import {resizeHandler} from '@/components/table/table.resize';
 import {isCell, matrix, shouldResize, nextSelector} from './table.functions';
 import {TableSelection} from '@/components/table/TableSelection';
 import {$} from '@core/dom';
+import * as actions from '@/redux/actions';
+import {defaultStyles} from '@/constants';
+import {parse} from '@core/parse';
+
 
 export class Table extends ExcelCopmonent {
   static className = 'excel__table';
@@ -17,16 +21,11 @@ export class Table extends ExcelCopmonent {
   }
 
   toHTML() {
-    return createTable();
+    return createTable(20, this.store.getStore());
   }
 
   prepare() {
     this.selection = new TableSelection();
-  }
-
-  selectCell($cell) {
-    this.selection.select($cell);
-    this.$emit('table:select', $cell);
   }
 
   init() {
@@ -34,26 +33,52 @@ export class Table extends ExcelCopmonent {
 
     this.selectCell(this.$root.find('[data-id="0:0"]'));
 
-    this.$on('it is working', (text) => {
-      this.selection.current.text(text);
+    this.$on('formula:input', (value) => {
+      this.selection.current.attr('data-value', value);
+      this.selection.current.text(parse(value));
+      this.updateTextInStore(value);
     });
 
     this.$on('formula:focus', () => {
       this.selection.current.focus();
     });
+
+    this.$on('toolbar:applyStyle', (value) => {
+      this.selection.applyStyles(value);
+      this.$dispatch(actions.applyStyles({
+        value,
+        ids: this.selection.selectedIds,
+      }));
+    });
+  }
+
+  selectCell($cell) {
+    this.selection.select($cell);
+    this.$emit('table:select', $cell);
+    const styles = $cell.getStyles(Object.keys(defaultStyles));
+    this.$dispatch(actions.changeStyles(styles));
+  }
+
+  async tableResize(e) {
+    try {
+      const data = await resizeHandler(this.$root, e);
+      this.$dispatch(actions.tableResize(data));
+    } catch (e) {
+      console.log(e.message());
+    }
   }
 
   onMousedown(e) {
     if (shouldResize(e)) {
-      resizeHandler(this.$root, e);
+      this.tableResize(e);
     } else if (isCell(e)) {
       const $target = $(e.target);
       if (e.shiftKey) {
-        const $cells = matrix( $target, this.selection.current)
+        const $cells = matrix($target, this.selection.current)
             .map((id) => this.$root.find([`[data-id="${id}"]`]));
         this.selection.selectGroup($cells);
       } else {
-        this.selection.select($target);
+        this.selectCell($target);
       }
     }
   }
@@ -78,7 +103,14 @@ export class Table extends ExcelCopmonent {
     }
   }
 
+  updateTextInStore(value) {
+    this.$dispatch(actions.changeText({
+      id: this.selection.current.id(),
+      value,
+    }));
+  }
+
   onInput(event) {
-    this.$emit('table:input', $(event.target));
+    this.updateTextInStore($(event.target).text());
   }
 }
