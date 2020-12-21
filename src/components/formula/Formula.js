@@ -44,7 +44,8 @@ export class Formula extends ExcelCopmonent {
   }
 
   onInput(event) {
-    this.$emit('formula:input', $(event.target).text());
+    const text = $(event.target).text();
+    this.$emit('formula:input', text);
   }
 
   onKeydown(event) {
