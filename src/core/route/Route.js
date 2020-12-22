@@ -1,5 +1,4 @@
 import {$} from '@core/dom';
-import {ActiveRoute} from '@core/route/ActiveRoute';
 
 export class Route {
   constructor(selector, routes) {
@@ -21,8 +20,11 @@ export class Route {
   }
 
   changePageHandler() {
-    console.log(ActiveRoute.path);
-    console.log(ActiveRoute.param);
+    const Page = this.routes.excel;
+    const page = new Page();
+    this.$placeholder.append(page.getRoot());
+
+    page.afterRender();
   }
 
   destroy() {
