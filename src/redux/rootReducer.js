@@ -30,7 +30,7 @@ export function rootReducer(state, action) {
       };
 
     case APPLY_STYLES:
-      val = state['stylesState'] || {};
+      val = {...state['stylesState'] || {}};
       action.data.ids.forEach((id) => {
         val[id] = {...val[id], ...action.data.value};
       });
