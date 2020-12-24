@@ -1,7 +1,7 @@
 import {
   APPLY_STYLES,
   CHANGE_STYLES, CHANGE_TABLE_NAME,
-  CHANGE_TEXT,
+  CHANGE_TEXT, OPENED_DATE,
   TABLE_RESIZE,
 } from '@/redux/types';
 
@@ -37,5 +37,11 @@ export function changeTableTitle(data) {
   return {
     type: CHANGE_TABLE_NAME,
     data
+  };
+}
+
+export function getOpenedDate(data) {
+  return {
+    type: OPENED_DATE
   };
 }

@@ -1,7 +1,7 @@
 import {
   APPLY_STYLES,
   CHANGE_STYLES, CHANGE_TABLE_NAME,
-  CHANGE_TEXT,
+  CHANGE_TEXT, OPENED_DATE,
   TABLE_RESIZE,
 } from '@/redux/types';
 
@@ -30,7 +30,7 @@ export function rootReducer(state, action) {
       };
 
     case APPLY_STYLES:
-      val = state['stylesState'] || {};
+      val = {...state['stylesState'] || {}};
       action.data.ids.forEach((id) => {
         val[id] = {...val[id], ...action.data.value};
       });
@@ -47,13 +47,19 @@ export function rootReducer(state, action) {
         tableTitle: action.data
       };
 
+    case OPENED_DATE:
+      return {
+        ...state,
+        openedDate: new Date()
+      };
+
     default:
       return state;
   }
 }
 
 function value(state, field, action) {
-  const val = state[field] || {};
+  const val = {...state[field] || {}};
   val[action.data.id] = action.data.value;
   return val;
 }
