@@ -1,7 +1,7 @@
 import {
   APPLY_STYLES,
   CHANGE_STYLES, CHANGE_TABLE_NAME,
-  CHANGE_TEXT,
+  CHANGE_TEXT, OPENED_DATE,
   TABLE_RESIZE,
 } from '@/redux/types';
 
@@ -45,6 +45,12 @@ export function rootReducer(state, action) {
       return {
         ...state,
         tableTitle: action.data
+      };
+
+    case OPENED_DATE:
+      return {
+        ...state,
+        openedDate: new Date()
       };
 
     default:
