@@ -3,12 +3,12 @@ export function createInput(state) {
         <input type="text" class="input" value="${state}" />
 
         <div>
-          <div class="button">
-            <i class="material-icons">delete</i>
+          <div class="button" data-button="delete">
+            <i class="material-icons" data-button="delete">delete</i>
           </div>
 
-          <div class="button">
-            <i class="material-icons">exit_to_app</i>
+          <div class="button" data-button="exit">
+            <i class="material-icons" data-button="exit">exit_to_app</i>
           </div>
        </div>
     `;
