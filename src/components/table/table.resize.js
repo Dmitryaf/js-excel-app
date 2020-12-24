@@ -1,19 +1,19 @@
 import {$} from '@core/dom';
 
 export function resizeHandler($root, e) {
-  const $resizer = $(e.target);
-  const $parent = $resizer.closest('[data-type="resizable"]');
-  const coords = $parent.getCoord();
-  const type = e.target.dataset.resize;
-  const sideProp = type === 'col' ? 'bottom' : 'right';
-  let value;
-
-  $resizer.css({
-    opacity: 1,
-    [sideProp]: '-2000px',
-  });
-
   return new Promise((resolve) => {
+    const $resizer = $(e.target);
+    const $parent = $resizer.closest('[data-type="resizable"]');
+    const coords = $parent.getCoord();
+    const type = e.target.dataset.resize;
+    const sideProp = type === 'col' ? 'bottom' : 'right';
+    let value;
+
+    $resizer.css({
+      opacity: 1,
+      [sideProp]: '-2000px',
+    });
+
     document.onmousemove = (event) => {
       $resizer.$el.classList.add('active');
       if (type === 'col') {
