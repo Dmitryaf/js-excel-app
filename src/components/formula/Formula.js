@@ -1,6 +1,6 @@
 import {ExcelCopmonent} from '@core/ExcelCopmonent';
 import {TableSelection} from '@/components/table/TableSelection';
-import {$} from '@core/dom';
+import {$} from '@core/Dom';
 
 export class Formula extends ExcelCopmonent {
   static className = 'excel__formula';

@@ -1,4 +1,4 @@
-import {$} from '@core/dom';
+import {$} from '@core/Dom';
 import {ActiveRoute} from '@core/route/ActiveRoute';
 
 export class Route {

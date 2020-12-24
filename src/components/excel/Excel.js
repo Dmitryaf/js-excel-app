@@ -1,6 +1,6 @@
-import {$} from '@core/dom';
+import {$} from '@core/Dom';
 import {Emitter} from '@core/Emitter';
-import {StoreSubscriber} from '@core/StoreSubscriber';
+import {StoreSubscriber} from '@core/store/StoreSubscriber';
 import * as actions from '@/redux/actions';
 
 export class Excel {

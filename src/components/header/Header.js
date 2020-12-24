@@ -1,7 +1,7 @@
 import {ExcelCopmonent} from '@core/ExcelCopmonent';
 import * as actions from '@/redux/actions';
 import {createInput} from '@/components/header/header.template';
-import {$} from '@core/dom';
+import {$} from '@core/Dom';
 import {debounce} from '@core/utils';
 import {ActiveRoute} from '@core/route/ActiveRoute';
 

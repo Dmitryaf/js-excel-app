@@ -1,4 +1,4 @@
-import {DomListener} from '@core/DOMlistener';
+import {DomListener} from '@core/DomListener';
 
 export class ExcelCopmonent extends DomListener {
   constructor($root, options = {}) {

@@ -3,10 +3,10 @@ import {createTable} from '@/components/table/table.template';
 import {resizeHandler} from '@/components/table/table.resize';
 import {isCell, matrix, shouldResize, nextSelector} from './table.functions';
 import {TableSelection} from '@/components/table/TableSelection';
-import {$} from '@core/dom';
+import {$} from '@core/Dom';
 import * as actions from '@/redux/actions';
 import {defaultStyles} from '@/constants';
-import {parse} from '@core/parse';
+import {parse} from '@core/utils';
 
 
 export class Table extends ExcelCopmonent {

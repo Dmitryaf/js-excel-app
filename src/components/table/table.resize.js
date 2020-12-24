@@ -1,4 +1,4 @@
-import {$} from '@core/dom';
+import {$} from '@core/Dom';
 
 export function resizeHandler($root, e) {
   return new Promise((resolve) => {
