@@ -1,7 +1,11 @@
-export function toHTML() {
+import {storage} from '@core/utils';
+
+export function toHTML(key) {
+  const model = storage(key);
+  const id = key.split(':')[1];
   return `
       <li class="db__record">
-        <a href="#excel">Таблица номер 1</a>
+        <a href="#excel/${id}">${model.tableTitle}</a>
         <strong>12.06.2020</strong>
      </li>
   `;
@@ -33,7 +37,7 @@ export function createRecordsTable() {
         </div>
 
         <ul class="db__list">
-            ${keys.map(toHTML).join()}
+            ${keys.map(toHTML).join('')}
         </ul>
   `;
 }
